@@ -1,0 +1,52 @@
+{% extends 'Utilisateur.base.html' %} 
+ 
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            {% if livre.image_url %}
+            <img src="{{ livre.image_url }}" class="img-fluid rounded" alt="{{ livre.titre }}">
+            {% else %}
+            <div class="bg-light p-5 text-center">
+                <i class="bi bi-book" style="font-size: 5rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1>{{ livre.titre }}</h1>
+            <p class="lead">Par {{ livre.auteurs|default:"Auteur inconnu" }}</p>
+            
+            <div class="mb-4">
+                {% if livre.langues %}
+                <span class="badge bg-primary me-2">{{ livre.langues }}</span>
+                {% endif %}
+                
+                {% if livre.genres %}
+                <span class="badge bg-secondary">{{ livre.genres }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <h4>Télécharger</h4>
+                <div class="list-group">
+                    {% for link in livre.download_links %}
+                    <a href="{{ link.url }}" class="list-group-item list-group-item-action" target="_blank">
+                        {{ link.format }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            {% if livre.texte_url %}
+            <a href="{{ livre.texte_url }}" class="btn btn-primary" target="_blank">
+                <i class="bi bi-book"></i> Lire en ligne
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'livre_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

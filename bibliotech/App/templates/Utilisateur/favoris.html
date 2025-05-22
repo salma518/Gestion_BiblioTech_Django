@@ -1,0 +1,188 @@
+
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Mes Favoris</h1>
+
+    {% if favoris %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in favoris %}
+                <tr>
+                    <td>{{ item.livre.titre }}</td>
+                    <td>{{ item.livre.auteur }}</td>
+                    <td>{{ item.livre.prix }} €</td>
+                    <td>
+                        <form method="POST" action="{% url 'supprimer_des_favoris' item.livre.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Retirer</button>
+                        </form>
+                        <form method="post" action="{% url 'ajouter_au_panier' livre_id=item.livre.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-edit me-2"></i>Ajouter au panier
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center mt-4">
+            <a href="{% url 'home_user' %}" class="btn btn-success1">
+                <i class="fas fa-arrow-left me-2"></i>Retour au liste
+            </a>
+        </div>
+
+    {% else %}
+        <div class="alert alert-info">Votre liste de Favoris est vide.</div>
+        <div class="text-center mt-4">
+            <a href="{% url 'home_user' %}" class="btn btn-success1">
+                <i class="fas fa-arrow-left me-2"></i>Retour au liste
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
+
+{% block extra_css %}
+<style>
+   /* styles.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.my-4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+    background-color: #1a237e;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #d6e8db;
+    color: #555;
+}
+
+.table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background-color:var(--blue);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #304ffe;
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.btn-success:hover {
+    background-color:  #1a237e;
+    transform: scale(1.05);
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color:  #1a237e;
+    color:white;
+    border: 1px solid #1a237e;
+    text-align: center;
+}
+
+.total-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .my-4 {
+        font-size: 1.5rem;
+    }
+}
+
+.btn-success1 {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 80%;
+}
+
+.btn-success1:hover {
+    background-color: #304ffe;
+    transform: scale(1.05);
+}
+
+/* Variables */
+:root {
+    --blue:  #1a237e;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}
+

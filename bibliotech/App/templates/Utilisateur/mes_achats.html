@@ -1,0 +1,165 @@
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Mes Achats</h2>
+    
+    {% if achats %}
+        <div class="row">
+            {% for achat in achats %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5>{{ achat.titre }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Email:</strong> {{ achat.mail }} </p>
+                        <p><strong>Nom:</strong> {{ achat.nom }} {{ achat.prenom }}</p>
+                        <p><strong>Date_Commande:</strong> {{ achat.date_Commande  }}</p>
+                        <p><strong>Montant:</strong> {{ achat.montant_total }} €</p>
+                        <p><strong>Quantite:</strong> {{ achat.quantite }} </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Vous n'avez aucun achat en cours.
+        </div>
+    {% endif %}
+    <div class="text-center mt-4">
+        <a href="{% url 'home_user' %}" class="btn btn-success1">
+            <i class="fas fa-arrow-left me-2"></i>Retour au liste
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Titre principal */
+h2.mb-4 {
+    color: #1a237e;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem !important;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+h2.mb-4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, #1a237e, #304ffe);
+    border-radius: 3px;
+}
+
+/* Cartes d'achat */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #1a237e, #304ffe);
+    border-bottom: none;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    color: white;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Boutons */
+.btn-primary {
+    background-color: #1a237e;
+    border-radius: 10px;
+    color: white;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+.btn-success1 {
+    background-color: #1a237e;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 2rem;
+}
+
+.btn-success1:hover {
+    background-color: #304ffe;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 35, 126, 0.25);
+}
+
+.btn-success1 i {
+    margin-right: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #304ffe;
+}
+
+/* Alertes */
+.alert-info {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    border: none;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+</style>
+{% endblock %}

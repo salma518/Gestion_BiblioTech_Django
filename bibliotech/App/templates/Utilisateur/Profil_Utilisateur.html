@@ -1,0 +1,294 @@
+{% extends 'Utilisateur/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-5">
+    <!-- Header with Back Button -->
+    <div class="d-flex align-items-center mb-4">
+        <a href="{% url 'liste_utilisateurs' %}" class="btn btn-light me-3">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-0">Profil Utilisateur</h2>
+            <p class="text-muted mb-0">Détails et activités de l'utilisateur</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% if utilisateur %}
+        <!-- User Info Card -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar-lg mx-auto mb-3">
+                            <div class="avatar bg-primary-soft rounded-circle">
+                                <span class="avatar-text">{{ utilisateur.nom|first|upper }}</span>
+                            </div>
+                        </div>
+                        <h4 class="mb-1">{{ utilisateur.nom }} {{ utilisateur.prenom }}</h4>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-envelope me-2"></i>{{ utilisateur.email }}
+                        </p>
+                    </div>
+
+                    <hr>
+
+                    <div class="user-info">
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">ID Utilisateur</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-id-card text-primary me-2"></i>
+                                <span>{{ utilisateur.id }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">Date d'inscription</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span>{{ utilisateur.date_joined|date:"d M Y" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">Statut du compte</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-circle {% if utilisateur.is_active %}text-success{% else %}text-danger{% endif %} me-2"></i>
+                                <span>{% if utilisateur.is_active %}Actif{% else %}Inactif{% endif %}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">Téléphone</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span>{{ utilisateur.numeroTelephone}}</span>
+                            </div>
+                        </div>
+                          
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">CIN</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span>{{ utilisateur.cin}}</span>
+                            </div>
+                        </div>
+    
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">Adresse</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span>{{ utilisateur.adresse  }}</span>
+                            </div>
+                        </div> 
+
+                        <div class="info-item mb-3">
+                            <small class="text-muted d-block mb-1">Adresse</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <span>{{ utilisateur.solde  }}</span>
+                            </div>
+                        </div> 
+                    
+                        <div class="info-item">
+                            <small class="text-muted d-block mb-1">Dernière connexion</small>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <span>{{ utilisateur.last_login|default:"Jamais connecté" }}</span>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="d-grid gap-2">
+                            <a href="{% url 'modification_User_profile' %}" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Modifier Profil
+                            </a>
+                            <a href="{% url 'home_user' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Cards -->
+        <div class="col-lg-8">
+            <!-- Stats Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar bg-primary-soft rounded">
+                                        <i class="fas fa-book text-primary"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Emprunts totaux</h6>
+                                    <h4 class="mb-0">{{ utilisateur.emprunts.count }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar bg-danger-soft rounded">
+                                        <i class="fas fa-exclamation-triangle text-danger"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Achats</h6>
+                                    <h4 class="mb-0">{{ utilisateur.commandes.count }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="card-title mb-0">Activités récentes</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0">Livre</th>
+                                    <th class="border-0">Date d'emprunt</th>
+                                    <th class="border-0">Date de retour</th>
+                                    <th class="border-0">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emprunt in utilisateur.emprunts.all %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if emprunt.livre.image_url %}
+                                            <img src="{{ emprunt.livre.image_url }}" class="rounded me-3" width="40" height="40" style="object-fit: cover;">
+                                            {% else %}
+                                            <div class="avatar bg-light rounded me-3">
+                                                <i class="fas fa-book text-muted"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ emprunt.livre.titre }}</h6>
+                                                <small class="text-muted">{{ emprunt.livre.auteur }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ emprunt.date_debut|date:"d M Y" }}</td>
+                                    <td>{{ emprunt.date_fin|date:"d M Y" }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill {% if emprunt.est_retourne %}bg-success{% elif emprunt.est_en_retard %}bg-danger{% else %}bg-warning{% endif %}">
+                                            
+                                            En cours
+                                            
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4">
+                                        <div class="text-muted">
+                                            <i class="fas fa-book fa-2x mb-3"></i>
+                                            <p>Aucun emprunt enregistré</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+        <div class="text-muted">
+            <i class="fas fa-book fa-2x mb-3"></i>
+            <p>Utilisateur non trouvé</p>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar-lg {
+        width: 80px;
+        height: 80px;
+    }
+
+    .avatar-text {
+        color: #4f46e5;
+        font-weight: 600;
+        font-size: 2rem;
+    }
+
+    .bg-primary-soft {
+        background-color: #eff6ff;
+    }
+
+    .bg-success-soft {
+        background-color: #ecfdf5;
+    }
+
+    .bg-warning-soft {
+        background-color: #fffbeb;
+    }
+
+    .bg-danger-soft {
+        background-color: #fee2e2;
+    }
+
+    .text-primary {
+        color: #4f46e5 !important;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .info-item small {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 1rem;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 0.9em;
+    }
+
+    .btn-outline-primary {
+        color: #4f46e5;
+        border-color: #4f46e5;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+    }
+</style>
+{% endblock %}

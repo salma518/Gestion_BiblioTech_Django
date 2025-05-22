@@ -1,0 +1,79 @@
+{% extends 'Utilisateur.base.html' %} 
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Catalogue de livres</h1>
+    
+    <!-- Formulaire de recherche -->
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher un livre..." 
+                   value="{{ search_query }}">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+    
+    <!-- Liste des livres -->
+    <div class="row">
+        {% for livre in livres %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if livre.image_url %}
+                <img src="{{ livre.image_url }}" class="card-img-top" alt="{{ livre.titre }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ livre.titre }}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">Par {{ livre.auteurs|default:"Auteur inconnu" }}</small>
+                    </p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{% url 'livre_detail' livre.id %}" class="btn btn-sm btn-outline-primary">
+                        Voir détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Aucun livre trouvé.</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if livres.has_other_pages %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if livres.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ livres.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                    Précédent
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in livres.paginator.page_range %}
+                {% if livres.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if livres.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ livres.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                    Suivant
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

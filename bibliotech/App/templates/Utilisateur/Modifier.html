@@ -1,0 +1,60 @@
+{% extends 'Utilisateur/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Modifier mes informations</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label">Nom</label>
+                                {{ form.nom }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.prenom.id_for_label }}" class="form-label">Prénom</label>
+                                {{ form.prenom }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.numeroTelephone.id_for_label }}" class="form-label">Téléphone</label>
+                            {{ form.numeroTelephone }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.adresse.id_for_label }}" class="form-label">Adresse</label>
+                            {{ form.adresse }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.cin.id_for_label }}" class="form-label">CIN</label>
+                            {{ form.cin }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.solde.id_for_label }}" class="form-label">solde</label>
+                            {{ form.solde }}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            <a href="{% url 'home_user' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

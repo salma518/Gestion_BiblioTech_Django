@@ -1,0 +1,137 @@
+<!-- templates/Administrateur/homePage.html -->
+{% extends 'Administrateur/base.html' %}
+
+{% block title %}Tableau de Bord - BiblioTech Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Stats Overview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-1">Total Utilisateurs</a></h6>
+                            <h2 class="mb-0">{{ nbrUser }}</h2>
+                        </div>
+                        <div class="fs-1 opacity-75">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-1">Livres Disponibles</h6>
+                            <h2 class="mb-0">{{nbrLivre}}</h2>
+                        </div>
+                        <div class="fs-1 opacity-75">
+                            <i class="bi bi-book"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-1">Emprunts Actifs</h6>
+                            <h2 class="mb-0">{{nbrEmp}}</h2>
+                        </div>
+                        <div class="fs-1 opacity-75">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-1">Achats d'aujourdhui</h6>
+                            <h2 class="mb-0">{{total_achats_jour}}</h2>
+                        </div>
+                        <div class="fs-1 opacity-75">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+
+    <!-- Recent Activities and Quick Actions -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Activités Récentes</h5>
+                </div>
+                {% load tz %}
+                {% now "Y-m-d" as today %} 
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <!-- Emprunts du jour -->
+                        {% for emprunt in Emprunt_actifs %}
+                        {% if  emprunt.date_debut|date:"Y-m-d" == today %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Nouvel emprunt</h6>
+                                <small class="text-muted">{{ emprunt.date_debut|date:"H:i" }} ago</small>
+                            </div>
+                            <p class="mb-1">{{ emprunt.user.nom }} a emprunté "{{ emprunt.livre.titre }}"</p>
+                        </div>
+                        {% endif %}
+                        {% empty %}
+                        <div class="list-group-item px-0">
+                            <p class="mb-1">Aucun emprunt aujourd'hui</p>
+                        </div>
+                        
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Achats recents</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                      
+                       <!-- Achats du jour -->
+                         
+                       {% for achat in NVAchats %}
+                       {% if  achat.date|date:"Y-m-d" == today %}
+                       <div class="list-group-item px-0">
+                           <div class="d-flex w-100 justify-content-between">
+                               <h6 class="mb-1">Nouvel achat</h6>
+                               <small class="text-muted">{{ achat.date|date:"H:i" }} ago</small>
+                           </div>
+                           <p class="mb-1">Achat de "{{ achat.livre.titre }}" ({{ achat.quantite }} unités)</p>
+                       </div>
+                       {% endif %}
+                       {% empty %}
+                       <div class="list-group-item px-0">
+                           <p class="mb-1">Aucun achat aujourd'hui</p>
+                       </div>
+                       {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

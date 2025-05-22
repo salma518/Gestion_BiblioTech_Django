@@ -1,0 +1,289 @@
+<head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Mon Panier</h1>
+
+    {% if items_panier %}
+
+        {% if Rup %}
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+        <table class="table">
+          <h1 class="my-4">Livres en rupture de stock</h1>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Prix</th>
+                    <th>Quantite</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items_panier %}
+                {% if item.quantite == 0 %}
+                <tr>
+                    <td>{{ item.livre.titre }}</td>
+                    <td>{{ item.livre.auteur }}</td>
+                    <td>{{ item.livre.prix }} €</td>
+                    <td>
+                        
+                            <form method="POST" action="{% url 'panier' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="livre_id" value="{{ item.livre.id }}">
+                                <input type="hidden" name="action" value="decrementer">
+                                <button type="submit" class="btn btn-outline-secondary px-2 py-0" 
+                                        {% if item.quantite <= 1 %}disabled{% endif %}>-</button>
+                            </form>
+                            
+                            <span class="px-2 align-middle">{{ item.quantite }}</span>
+                            
+                            <form method="POST" action="{% url 'panier' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="livre_id" value="{{ item.livre.id }}">
+                                <input type="hidden" name="action" value="incrementer">
+                                <button type="submit" class="btn btn-outline-secondary px-2 py-0"
+                                {% if item.quantite >= item.livre.quantite %}disabled{% endif %}>+</button>
+                            </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'supprimer_du_panier' item.livre.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Retirer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %} 
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if Dispo%} 
+        <table class="table">
+            <h1 class="my-4">Livres disponible</h1>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Prix</th>
+                    <th>Quantite</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items_panier %}
+                {% if item.quantite != 0 %}
+                <tr>
+                    <td>{{ item.livre.titre }}</td>
+                    <td>{{ item.livre.auteur }}</td>
+                    <td>{{ item.livre.prix }} €</td>
+                    <td>
+                        
+                            <form method="POST" action="{% url 'panier' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="livre_id" value="{{ item.livre.id }}">
+                                <input type="hidden" name="action" value="decrementer">
+                                <button type="submit" class="btn btn-outline-secondary px-2 py-0" 
+                                        {% if item.quantite <= 1 %}disabled{% endif %}>-</button>
+                            </form>
+                            
+                            <span class="px-2 align-middle">{{ item.quantite }}</span>
+                            
+                            <form method="POST" action="{% url 'panier' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="livre_id" value="{{ item.livre.id }}">
+                                <input type="hidden" name="action" value="incrementer">
+                                <button type="submit" class="btn btn-outline-secondary px-2 py-0"
+                                {% if item.quantite >= item.livre.quantite %}disabled{% endif %}>+</button>
+                            </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'supprimer_du_panier' item.livre.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Retirer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %} 
+            </tbody>
+        </table>
+        {% endif %}
+
+        <h3>Total: {{ total }} €</h3>
+
+        <div name="Methode">
+            <a href="{% url 'valider_panier' %}?action_type=achat" name="Achat" class="btn btn-success">Acheter</a>
+            <a href="{% url 'valider_panier' %}?action_type=emprunt" name="Emprunt" class="btn btn-success">Emprunter</a>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'home_user' %}" class="btn btn-success1">
+                <i class="fas fa-arrow-left me-2"></i>Retour au panier
+            </a>
+        </div>
+     {% else %}
+        <div class="alert alert-info">Votre panier est vide.</div>
+        <div class="text-center mt-4">
+            <a href="{% url 'home_user' %}" class="btn btn-success1">
+                <i class="fas fa-arrow-left me-2"></i>Retour au Liste
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %} 
+
+{% block extra_css %}
+<style>
+   /* styles.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.my-4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+    background-color:  #1a237e;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #d6e8db;
+    color: #555;
+}
+
+.table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background-color: rgba(255, 155, 222, 0.381);
+    color: #333;
+}
+
+.btn-danger:hover {
+    background-color: var(--blue);
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.btn-success:hover {
+    background-color: #304ffe;
+    transform: scale(1.05);
+}
+
+.btn-success1 {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 80%;
+    text-decoration: none;
+}
+
+.btn-success1:hover {
+    background-color: #304ffe;
+    transform: scale(1.05);
+}
+
+.alert {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            animation: slideInDown 0.5s ease;
+        }
+
+.alert-info {
+    background-color: rgba(255, 155, 222, 0.381);
+    color:#333;
+    border: 1px solid rgba(255, 155, 222, 0.381);
+    text-align: center;
+}
+
+.total-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .my-4 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Variables */
+:root {
+    --blue: #1a237e;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

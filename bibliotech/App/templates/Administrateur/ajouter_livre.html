@@ -1,0 +1,253 @@
+{% extends 'Administrateur/base.html' %}
+{% load static %}
+
+{% block title %}Ajouter un Livre - BiblioTech{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-book-medical me-2"></i>Ajouter un Nouveau Livre</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="addBookForm" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Informations de base -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Informations de base</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_titre" class="form-label">Titre du Livre*</label>
+                                {{ form.titre }}
+                                <div class="invalid-feedback">Le titre est requis</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="id_auteur" class="form-label">Auteur*</label>
+                                {{ form.auteur }}
+                                <div class="invalid-feedback">L'auteur est requis</div>
+                            </div>
+                        </div>
+
+                        <!-- Détails du livre -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3"><i class="fas fa-book-open me-2"></i>Détails du livre</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_genre" class="form-label">Genre*</label>
+                                {{ form.genre }}
+                                <div class="invalid-feedback">Le genre est requis</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="id_date_pub" class="form-label">Date de Publication*</label>
+                                {{ form.date_pub }}
+                                <div class="invalid-feedback">La date de publication est requise</div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="id_detail" class="form-label">Description*</label>
+                                {{ form.detail }}
+                                <div class="invalid-feedback">La description est requise</div>
+                            </div>
+                        </div>
+
+                        <!-- Informations techniques -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3"><i class="fas fa-cogs me-2"></i>Informations techniques</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_prix" class="form-label">Prix*</label>
+                                <div class="input-group has-validation">
+                                    {{ form.prix }}
+                                    <span class="input-group-text">€</span>
+                                    <div class="invalid-feedback">Le prix est requis</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_prix" class="form-label">Quantite</label>
+                                <div class="input-group has-validation">
+                                    {{ form.quantite }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="id_image_url" class="form-label">URL de l'image*</label>
+                                <div class="input-group">
+                                    {{ form.image_url }}
+                                    {% comment %} <button class="btn btn-outline-secondary" type="button" id="previewImageBtn" data-bs-toggle="tooltip" title="Aperçu de l'image">
+                                        <i class="fas fa-eye"></i>
+                                    </button> {% endcomment %}
+                                </div>
+                                <div class="invalid-feedback">L'URL de l'image est requise</div>
+                                <div id="imagePreview" class="mt-2 d-none">
+                                    <img src="" alt="Aperçu" class="img-thumbnail" style="max-height: 200px;">
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="id_download_url" class="form-label">URL de téléchargement*</label>
+                                {{ form.download_url }}
+                                <div class="invalid-feedback">L'URL de téléchargement est requise</div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'liste_livres' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i>Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary" >
+                                <i class="fas fa-save me-2"></i>Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour l'aperçu de l'image -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Aperçu de l'image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" alt="Aperçu" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        border: none;
+    }
+    
+    .card-header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .btn {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-1px);
+    }
+
+    h5.text-primary {
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .invalid-feedback {
+        font-size: 0.875rem;
+    }
+
+    #imagePreview img {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-radius: 0 8px 8px 0;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Activation des tooltips Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    // Validation du formulaire
+    const form = document.getElementById('addBookForm');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // Aperçu de l'image
+    const imageUrlInput = document.querySelector('#id_image_url');
+    const previewBtn = document.querySelector('#previewImageBtn');
+    const previewContainer = document.querySelector('#imagePreview');
+    const previewImage = previewContainer.querySelector('img');
+    const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+    const modalImage = document.querySelector('#imagePreviewModal img');
+
+    previewBtn.addEventListener('click', function() {
+        const imageUrl = imageUrlInput.value.trim();
+        if (imageUrl) {
+            previewImage.src = imageUrl;
+            modalImage.src = imageUrl;
+            previewContainer.classList.remove('d-none');
+            modal.show();
+        } else {
+            alert('Veuillez entrer une URL d\'image valide');
+        }
+    });
+
+    // Amélioration de l'UX pour les champs de texte
+    const textInputs = document.querySelectorAll('.form-control');
+    textInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+});
+</script>
+{% endblock %}

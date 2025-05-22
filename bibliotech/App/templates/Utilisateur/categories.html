@@ -1,0 +1,23 @@
+{% extends 'Utilisateur/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Genres de Livres</h2>
+    
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for genre in genres %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ genre }}</h5>
+                    <a href="{% url 'livres_par_genre' genre=genre %}" 
+                       class="btn btn-outline-primary btn-sm mt-2">
+                        Voir les livres
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
